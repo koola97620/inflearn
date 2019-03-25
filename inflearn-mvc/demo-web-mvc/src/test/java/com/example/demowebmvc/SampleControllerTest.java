@@ -1,23 +1,17 @@
 package com.example.demowebmvc;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.hasItems;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.head;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -81,6 +75,33 @@ public class SampleControllerTest {
       .contentType(MediaType.APPLICATION_JSON)
       .accept(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk());
+  }
+
+  @Test
+  public void 핸들러메소드2부() throws Exception {
+    mockMvc.perform(get("/events/1;name=keesun"))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("id").value(1));
+  }
+
+  @Test
+  public void postTest() throws Exception {
+    mockMvc.perform(post("/events2")
+        .param("name","keesun")
+        .param("limit","20"))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("name").value("keesun"));
+  }
+
+  @Test
+  public void eventForm() throws Exception {
+    mockMvc.perform(get("/events/form"))
+        .andDo(print())
+        .andExpect(view().name("events/form"))
+        .andExpect(model().attributeExists("event"));
+
   }
 
 
