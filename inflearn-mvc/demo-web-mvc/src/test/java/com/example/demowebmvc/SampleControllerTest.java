@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.servlet.ModelAndView;
 
 
 /**
@@ -102,6 +105,20 @@ public class SampleControllerTest {
         .andExpect(view().name("events/form"))
         .andExpect(model().attributeExists("event"));
 
+  }
+
+  @Test
+  public void postTest2() throws Exception {
+    ResultActions resultActions = mockMvc.perform(post("/events")
+        .param("name","keesun")
+        .param("limit","-10"))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(model().hasErrors());
+
+    ModelAndView modelAndView = resultActions.andReturn().getModelAndView();
+    Map<String,Object> map = modelAndView.getModel();
+    System.out.println(map.size());
   }
 
 

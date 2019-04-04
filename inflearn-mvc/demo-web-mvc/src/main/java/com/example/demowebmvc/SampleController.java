@@ -1,14 +1,20 @@
 package com.example.demowebmvc;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import javax.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.MatrixVariable;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -73,14 +79,14 @@ public class SampleController {
     return event;
   }
 
-  @PostMapping("/events")
-  @ResponseBody
-  public Event postEvent2(@RequestParam Map<String,String> params , @RequestParam Integer limit) {
-    Event event = new Event();
-    event.setName(params.get("name"));
-    event.setLimit(limit);
-    return event;
-  }
+//  @PostMapping("/events")
+//  @ResponseBody
+//  public Event postEvent2(@RequestParam Map<String,String> params , @RequestParam Integer limit) {
+//    Event event = new Event();
+//    event.setName(params.get("name"));
+//    event.setLimit(limit);
+//    return event;
+//  }
 
   @GetMapping("/events/form")
   public String eventForm(Model model) {
@@ -89,6 +95,39 @@ public class SampleController {
     model.addAttribute("event", newEvent);
     return "events/form";
   }
+
+    @PostMapping("/events")
+    public String postEvent2(@Validated @ModelAttribute Event event,
+        BindingResult bindingResult, Model model) {
+      if(bindingResult.hasErrors()) {
+//        System.out.println("=====================");
+//        bindingResult.getAllErrors().forEach(c -> {
+//              System.out.println(c.toString());
+//            });
+        return "/events/form";
+      }
+
+//      List<Event> eventList = new ArrayList<>();
+//      eventList.add(event);
+//      model.addAttribute("events", eventList);
+
+      return "redirect:/events/list";
+    }
+
+    @GetMapping("/events/list")
+    public String getList(Model model) {
+      Event event = new Event();
+      event.setName("spring");
+      event.setLimit(10);
+
+      List<Event> eventList = new ArrayList<>();
+      eventList.add(event);
+
+      model.addAttribute("events", eventList);
+
+      return "events/list";
+    }
+
 
 
 }
