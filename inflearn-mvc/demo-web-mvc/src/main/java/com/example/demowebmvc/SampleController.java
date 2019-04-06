@@ -1,9 +1,11 @@
 package com.example.demowebmvc;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
@@ -22,6 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 
 /**
  * @author choijaeyong on 22/03/2019.
@@ -30,6 +35,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 
 @Controller
+@SessionAttributes("event")
 public class SampleController {
 
   //@RequestMapping(value = "/hello", method = RequestMethod.GET)
@@ -88,23 +94,23 @@ public class SampleController {
 //    return event;
 //  }
 
-  @GetMapping("/events/form")
-  public String eventForm(Model model) {
-    Event newEvent = new Event();
-    newEvent.setLimit(50);
-    model.addAttribute("event", newEvent);
-    return "events/form";
+  @GetMapping("/events/form/name")
+  public String eventFormName(Model model, HttpSession httpSession) {
+    model.addAttribute("event", new Event());
+    //httpSession.setAttribute("event", newEvent); @SessionAttributes("event")해주면 이 코드가 없어도 알아서 세션에 넣어줌.
+    return "events/form-name";
   }
 
-    @PostMapping("/events")
-    public String postEvent2(@Validated @ModelAttribute Event event,
-        BindingResult bindingResult, Model model) {
+    @PostMapping("/events/form/name")
+    public String postEventName(@Validated @ModelAttribute Event event,
+        BindingResult bindingResult) {
       if(bindingResult.hasErrors()) {
 //        System.out.println("=====================");
 //        bindingResult.getAllErrors().forEach(c -> {
 //              System.out.println(c.toString());
 //            });
-        return "/events/form";
+//        sessionStatus.setComplete();
+        return "/events/form/limit";
       }
 
 //      List<Event> eventList = new ArrayList<>();
@@ -115,7 +121,8 @@ public class SampleController {
     }
 
     @GetMapping("/events/list")
-    public String getList(Model model) {
+    public String getList(Model model, @SessionAttribute("visitTime") LocalDateTime visitTime) {
+      System.out.println(visitTime);
       Event event = new Event();
       event.setName("spring");
       event.setLimit(10);
@@ -128,6 +135,30 @@ public class SampleController {
       return "events/list";
     }
 
+
+
+
+  @GetMapping("/events/form/limit")
+  public String eventFormLimit(@ModelAttribute Event event, Model model) {
+    model.addAttribute("event", event);
+    //httpSession.setAttribute("event", newEvent); @SessionAttributes("event")해주면 이 코드가 없어도 알아서 세션에 넣어줌.
+    return "events/form-limit";
+  }
+
+  @PostMapping("/events/form/limit")
+  public String postEventLimit(@Validated @ModelAttribute Event event,
+      BindingResult bindingResult,SessionStatus sessionStatus) {
+    if (bindingResult.hasErrors()) {
+//        System.out.println("=====================");
+//        bindingResult.getAllErrors().forEach(c -> {
+//              System.out.println(c.toString());
+//            });
+      return "/events/form/limit";
+    }
+    sessionStatus.setComplete();
+    return "redirect:/events/list";
+
+  }
 
 
 }
