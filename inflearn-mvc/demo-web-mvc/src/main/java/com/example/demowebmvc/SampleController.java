@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * @author choijaeyong on 22/03/2019.
@@ -120,23 +121,6 @@ public class SampleController {
       return "redirect:/events/list";
     }
 
-    @GetMapping("/events/list")
-    public String getList(Model model, @SessionAttribute("visitTime") LocalDateTime visitTime) {
-      System.out.println(visitTime);
-      Event event = new Event();
-      event.setName("spring");
-      event.setLimit(10);
-
-      List<Event> eventList = new ArrayList<>();
-      eventList.add(event);
-
-      model.addAttribute("events", eventList);
-
-      return "events/list";
-    }
-
-
-
 
   @GetMapping("/events/form/limit")
   public String eventFormLimit(@ModelAttribute Event event, Model model) {
@@ -147,7 +131,7 @@ public class SampleController {
 
   @PostMapping("/events/form/limit")
   public String postEventLimit(@Validated @ModelAttribute Event event,
-      BindingResult bindingResult,SessionStatus sessionStatus) {
+      BindingResult bindingResult,SessionStatus sessionStatus, RedirectAttributes redirectAttributes) {
     if (bindingResult.hasErrors()) {
 //        System.out.println("=====================");
 //        bindingResult.getAllErrors().forEach(c -> {
@@ -156,9 +140,32 @@ public class SampleController {
       return "/events/form/limit";
     }
     sessionStatus.setComplete();
+    //redirectAttributes.addAttribute("name",event.getName());
+    redirectAttributes.addFlashAttribute("newEvent", event);
     return "redirect:/events/list";
 
   }
+
+
+  @GetMapping("/events/list")
+  public String getList(//@ModelAttribute("newEvent") Event newEvent,
+      Model model, @SessionAttribute("visitTime") LocalDateTime visitTime) {
+    System.out.println(visitTime);
+    Event event = new Event();
+    event.setName("spring");
+    event.setLimit(10);
+
+    Event newEvent = (Event)model.asMap().get("newEvent");
+
+    List<Event> eventList = new ArrayList<>();
+    eventList.add(event);
+
+    model.addAttribute("events", eventList);
+
+    return "events/list";
+  }
+
+
 
 
 }

@@ -9,7 +9,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.xpath;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -129,6 +131,20 @@ public class SampleControllerTest {
     System.out.println(map.size());
   }
 
+
+  @Test
+  public void sessionTest() throws Exception{
+    Event event = new Event();
+    event.setName("haha");
+    event.setLimit(1234);
+
+    mockMvc.perform(get("/events/list")
+      .sessionAttr("visitTime", LocalDateTime.now())
+      .flashAttr("newEvent", event))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(xpath("//p").nodeCount(2));
+  }
 
 
 }
