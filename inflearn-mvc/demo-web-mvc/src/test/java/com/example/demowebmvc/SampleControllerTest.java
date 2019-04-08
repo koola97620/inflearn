@@ -143,6 +143,7 @@ public class SampleControllerTest {
       .flashAttr("newEvent", event))
         .andDo(print())
         .andExpect(status().isOk())
+        .andExpect(model().attributeExists("categories"))
         .andExpect(xpath("//p").nodeCount(2));
   }
 

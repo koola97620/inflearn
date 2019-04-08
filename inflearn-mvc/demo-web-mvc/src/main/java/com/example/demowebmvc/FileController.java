@@ -56,7 +56,7 @@ public class FileController {
     Resource resource = resourceLoader.getResource("classpath:" + filename);
     File file = resource.getFile();
 
-    Tika tika = new Tika(); 
+    Tika tika = new Tika();
     String type = tika.detect(file);
 
 

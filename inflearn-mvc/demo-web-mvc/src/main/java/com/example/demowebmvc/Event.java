@@ -1,7 +1,10 @@
 package com.example.demowebmvc;
 
+import java.time.LocalDate;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 /**
  * @author choijaeyong on 25/03/2019.
@@ -18,6 +21,9 @@ public class Event {
 //  @NotBlank(groups = ValidateName.class)
   @NotBlank
   private String name;
+
+  @DateTimeFormat(iso = ISO.DATE)
+  private LocalDate startDate;
 
   //@Min(value = 0,groups = ValidateLimit.class)
   @Min(0)
@@ -45,5 +51,13 @@ public class Event {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public LocalDate getStartDate() {
+    return startDate;
+  }
+
+  public void setStartDate(LocalDate startDate) {
+    this.startDate = startDate;
   }
 }
