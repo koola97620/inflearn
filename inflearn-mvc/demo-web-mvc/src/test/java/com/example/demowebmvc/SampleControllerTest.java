@@ -12,6 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.xpath;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -145,6 +147,20 @@ public class SampleControllerTest {
         .andExpect(status().isOk())
         .andExpect(model().attributeExists("categories"))
         .andExpect(xpath("//p").nodeCount(2));
+  }
+
+  @Test
+  public void tete() {
+    List<String> list = List.of("abc","abd","bbc");
+    List<String> list2 = Arrays.asList("abc","abd","bbc");
+    String join = String.join(",",list2);
+
+    list.add("aaaa");
+    list2.add("aaaa");
+
+    System.out.println(list);
+    System.out.println(list2);
+    System.out.println(join);
   }
 
 
