@@ -65,6 +65,8 @@ public class Main {
     return new Member("token");
   }
 
+
+
   public AuthResult authenticate(String id, String pw) {
     PasswordEncoder passwordEncoder = new PasswordEncoder();
     Member mem = findOne(id);
