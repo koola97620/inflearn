@@ -19,6 +19,7 @@ public class CurrencyController {
 
   @GetMapping("/api")
   public String getCurrencyData() {
+    // 역할분리는 나중에. 일단 기능테스트좀.
 
     URI uri = UriComponentsBuilder.fromHttpUrl("http://apilayer.net/api/live")
         .queryParam("access_key", "d7bba865db7d2615876ecb82f2b124f8")
@@ -32,6 +33,14 @@ public class CurrencyController {
     Response response = restTemplate.getForObject(uri, Response.class);
     System.out.println(response.getQuotes().size());
     System.out.println(response.getQuotes());
+
+    Float usdaud = response.getQuotes().get("USDAUD");
+    Float usdkrw = response.getQuotes().get("USDKRW");
+
+    Float audkrw = usdkrw/usdaud;
+
+    System.out.println(audkrw);
+
 
 
 
