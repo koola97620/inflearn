@@ -22,12 +22,12 @@ public class Application {
     SpringApplication.run(Application.class,args);
   }
 
-  @Bean
-  public HoloMan holoMan() {
-    HoloMan holoMan = new HoloMan();
-    holoMan.setName("jd");
-    holoMan.setHowLong(60);
-    return holoMan;
-  }
+//  @Bean
+//  public HoloMan holoMan() {
+//    HoloMan holoMan = new HoloMan();
+//    holoMan.setName("jd");
+//    holoMan.setHowLong(60);
+//    return holoMan;
+//  }
 
 }
